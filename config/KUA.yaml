@@ -1,0 +1,58 @@
+#main args
+adam_beta1: 0.9
+adam_beta2: 0.999
+decay_factor: 0.9
+config_files: ./config/
+dataset: KUA
+eval_freq: 5
+init_std: 0.02
+log_freq: 1
+min_lr: 1.0e-06
+output_dir: ./output
+patience: 5
+run_dir: ./run
+weight_decay: 0.0
+
+#model args
+'no': 1
+dropout: 0.3
+num_heads: 2
+num_experts: 8
+num_blocks: 2
+num_cluster: 8
+ffn_acti: relu
+hidden_dims: 32
+alpha: 12
+lmsal_heads: 2
+lmsals: 2
+
+# train args
+lr: 0.001
+batch_size: 1280
+seed: 2023
+max_epochs: 600
+warm_up_epoches: 200
+warm_up_cluster_epochs: 400
+maxlen: 50
+#loss args
+contrast_type: Hybrid
+rec_weight: 1.0
+behavior_weight: 0.1
+cf_weight: 0.1
+intent_cf_weight: 0.1
+trade_off: 0.1
+temperature: 1.0    
+
+#representation args
+seq_representation_type: mean
+prototype: shift
+seq_representation_instancecl_type: mean
+de_noise: False
+
+#augment_args
+augment_type: Random
+add_prob: 0.2
+click_prob: 0.2
+mask_ratio: 0.2
+clip_percentile: 60
+
