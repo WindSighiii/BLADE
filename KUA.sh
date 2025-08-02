@@ -2,7 +2,7 @@ python main.py \
 --model model.model \
 --trainer trainer \
 --dataset KUA \
---no 5 \
+--no 1 \
 --dropout 0.2 --num_heads 8 --num_experts 6 --ffn_acti gelu --num_blocks 2 --hidden_dims 32 \
 --early_fusion_type gate --transformer_num_heads 1 --transformer_num_blocks 3 --transformer_dropout 0.2 \
 --trade_off 0.6 --max_epochs 500 \
