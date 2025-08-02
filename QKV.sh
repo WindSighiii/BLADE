@@ -2,7 +2,7 @@ python main.py \
 --model model.model \
 --trainer trainer \
 --dataset QKV \
---no 07131107 \
+--no 1 \
 --dropout 0.3 --num_heads 8 --num_experts 4 --ffn_acti gelu --num_blocks 3 --hidden_dims 32 \
 --early_fusion_type sum --transformer_num_heads 2 --transformer_num_blocks 2 --transformer_dropout 0.2 \
 --trade_off 0.6 --max_epochs 1000 \
