@@ -3,7 +3,7 @@ python main.py \
 --trainer trainer \
 --dataset QKA \
 --config_files ./config/ \
---no 5 \
+--no 1 \
 --dropout 0.2 --num_heads 4 --num_experts 4 --ffn_acti gelu --num_blocks 2 --hidden_dims 32 \
 --early_fusion_type sum --transformer_num_heads 8 --transformer_num_blocks 2 --transformer_dropout 0.2 \
 --trade_off 0.7 --max_epochs 1000 \
