@@ -15,9 +15,9 @@ def main():
     parser.add_argument('--dataset', default='QKV', type=str)
     parser.add_argument('--config_files', type=str, default='./config/', help='config yaml files')
     parser.add_argument("--do_eval", action="store_true")
-    parser.add_argument('--model', type=str, default='model.model1_cross',
+    parser.add_argument('--model', type=str, default='model.model',
                     help='Path to the model module to import')
-    parser.add_argument('--trainer', type=str, default='trainer_preBehavior',
+    parser.add_argument('--trainer', type=str, default='trainer',
                     help='Trainer module path to import the trainer from')
     # model args
 
