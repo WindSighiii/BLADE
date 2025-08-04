@@ -39,7 +39,7 @@ def main():
 
     # train args
     parser.add_argument("--lr", type=float, default=0.001, help="learning rate of optimizer")
-    parser.add_argument("--batch_size", type=int, default=1280, help="batch size of training phase")
+    parser.add_argument("--batch_size", type=int, default=1024, help="batch size of training phase")
     parser.add_argument("--seed", type=int, default=2023, help="global random seed for CUDA and pytorch")
     parser.add_argument("--no_cuda", action="store_true")
     parser.add_argument("--max_epochs", type=int, help="max epochs")
@@ -49,7 +49,7 @@ def main():
     parser.add_argument("--rec_weight", type=float, default=1.0, help="rec weight")
 
     parser.add_argument("--cf_weight", type=float, default=0.1, help="cf weight")
-    parser.add_argument("--temperature", type=float, default=1.0, help="temperature")
+    parser.add_argument("--temperature", type=float, default=0.01, help="temperature")
 
     #representation args
     parser.add_argument("--seq_representation_type", type=str, default="mean", help="seq representation type")
