@@ -61,10 +61,7 @@ class Trainer:
         batch_size = concat_cur_bs.shape[0] // 2
         cl_output_slice = torch.split(cl_sequence_flatten, batch_size)
 
-        if self.config['de_noise']:
-            cl_loss = self.cf_criterion(cl_output_slice[0], cl_output_slice[1], intent_ids=intent_ids)
-        else:
-            cl_loss = self.cf_criterion(cl_output_slice[0], cl_output_slice[1], intent_ids=None)
+        cl_loss = self.cf_criterion(cl_output_slice[0], cl_output_slice[1], intent_ids=None)
         return cl_loss
     
 
