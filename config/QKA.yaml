@@ -12,7 +12,6 @@ output_dir: ./output
 patience: 5
 run_dir: ./run
 weight_decay: 0.0
-hidden_dims: 32
 maxlen: 50
 
 
