@@ -30,7 +30,7 @@ seed: 2023
 max_epochs: 1000
 maxlen: 50
 #loss args
-contrast_type: Hybrid
+contrast_type: InstanceCL
 rec_weight: 1.0
 cf_weight: 0.1
 temperature: 0.01   
