@@ -421,21 +421,7 @@ class MoeEncoder(nn.Module):
         for seqs_block in self.seqs_blocks:
             seqs = seqs_block(seqs,behaviors,attention_mask)
         return seqs
-class MoeEncoder_revise(nn.Module):
-    def __init__(self,config):
-        super(MoeEncoder_revise,self).__init__()
-        self.hidden_dims = config['hidden_dims']
-        self.num_experts = config['num_experts']
-        self.num_cluster = config['num_cluster']
-        self.num_blocks = config['num_blocks']
-        self.seqs_blocks = nn.ModuleList()
-        for _ in range(self.num_blocks):
-            seqs_block = MoeBlock_revise(config)
-            self.seqs_blocks.append(seqs_block)
-    def forward(self,seqs,behaviors,attention_mask):
-        for seqs_block in self.seqs_blocks:
-            seqs = seqs_block(seqs,behaviors,attention_mask)
-        return seqs
+
 class MoeEncoder_middle(nn.Module):
     def __init__(self,config):
         super(MoeEncoder_middle,self).__init__()
@@ -550,18 +536,7 @@ class MoeBlock(torch.nn.Module):
         seqs = self.moe(x,behaviors)
         seqs = self.ln2(x+seqs)
         return seqs
-class MoeBlock_revise(torch.nn.Module):
-    def __init__(self, config):
-        super(MoeBlock_revise, self).__init__()
-        self.attn =MultiHeadAttention(config)
-        self.moe= Moe(config)
-        self.ln1 = nn.LayerNorm(config['hidden_dims'], eps=1e-8)##?
-        self.ln2 = nn.LayerNorm(config['hidden_dims'], eps=1e-8)
-    def forward(self,seqs,behaviors,attention_mask,cluster_id,expand):
-        x= self.attn(seqs,attn_mask=attention_mask)
-        seqs = self.moe(x,behaviors,cluster_id,expand)
-        seqs = self.ln2(x+seqs)
-        return seqs
+
 class middle_moe_block(nn.Module):
     def __init__(self, config):
         super(middle_moe_block, self).__init__()
