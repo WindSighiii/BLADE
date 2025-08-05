@@ -154,30 +154,6 @@ class NCELoss(nn.Module):
         nce_loss = self.criterion(logits, labels)
         return nce_loss
     
-class triplet_contrastive_loss(nn.Module):
-    def __init__(self,config):
-        super(triplet_contrastive_loss, self).__init__()
-        self.device = torch.device("cuda" if config['cuda_condition'] else "cpu")
-        self.temperature=config['temperature']
-        self.seq_representation_instancecl_type=config['seq_representation_instancecl_type']
-        self.criterion = nn.CrossEntropyLoss().to(self.device)
-    def forward(self,s_u, s_u_aug1, s_u_aug2):
-
-        if self.seq_representation_instancecl_type == "mean":
-            s_u = torch.mean(s_u, dim=1, keepdim=False)
-        s_u=s_u.reshape(s_u.shape[0],-1)
-
-        s_u=F.normalize(s_u,p=2,dim=-1)
-        s_u_aug1=F.normalize(s_u_aug1,p=2,dim=-1)
-        s_u_aug2=F.normalize(s_u_aug2,p=2,dim=-1)
-        
-        sim_1 = F.cosine_similarity(s_u, s_u_aug1, dim=-1)/ self.temperature 
-        sim_2 = F.cosine_similarity(s_u, s_u_aug2, dim=-1)/ self.temperature 
-        logits = torch.stack([sim_1, sim_2], dim=1)
-        labels = torch.zeros(logits.shape[0], dtype=torch.long, device=logits.device)
-        
-        loss = self.criterion(logits, labels)
-        return loss
 
 
 class PCLoss(nn.Module):
@@ -429,21 +405,7 @@ class FeedForwardNetwork(nn.Module):
         outputs = outputs.transpose(-1, -2)  # as Conv1D requires (N, C, Length)
         outputs += inputs
         return outputs
-class behavior_pred(nn.Module):
-    def __init__(self,config):
-        super(behavior_pred,self).__init__()
-        self.hidden_dims = config['hidden_dims']
-        self.dropout_rate = config['dropout']
-        self.behavior_types = config['behavior_types']
-        self.behavior_pred_head = nn.Sequential(
-            nn.Linear(self.hidden_dims, self.hidden_dims),
-            nn.ReLU(),
-            nn.Dropout(self.dropout_rate),
-            nn.Linear(self.hidden_dims, self.behavior_types)
-        )
-    def forward(self,inputs):
-        outputs = self.behavior_pred_head(inputs)
-        return outputs
+
 class MoeEncoder(nn.Module):
     def __init__(self,config):
         super(MoeEncoder,self).__init__()
