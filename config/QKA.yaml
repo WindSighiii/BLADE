@@ -20,29 +20,24 @@ num_heads: 2
 num_experts: 8
 num_blocks: 2
 num_cluster: 8
-ffn_acti: relu
-hidden_dims: 64
-alpha: 12
-lmsal_heads: 2
-lmsals: 2
+ffn_acti: gelu
+hidden_dims: 32
 
 # train args
 lr: 0.001
-batch_size: 1280
+batch_size: 1024
 seed: 2023
 max_epochs: 1000
 maxlen: 50
 #loss args
 contrast_type: Hybrid
 rec_weight: 1.0
-behavior_weight: 0.1
 cf_weight: 0.1
-temperature: 1.0    
+temperature: 0.01   
 
 #representation args
 seq_representation_type: mean
 seq_representation_instancecl_type: mean
-de_noise: False
 
 #augment_args
 augment_type: Random
