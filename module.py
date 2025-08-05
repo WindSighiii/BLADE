@@ -230,39 +230,39 @@ class middle_attention(SelfAttention):
     def forward(self, item_embeds, behavior_embeds, attn_mask):
             # inputs: (batch, seq_len, hidden_dims)
         batch_size, seq_len, _ = item_embeds.size()
-        # 1. 线性变换
+
         Q = self.Q(item_embeds)  # (batch, seq_len, reconstruct_size)
         K = self.K(item_embeds)
         V = self.V(item_embeds)
         Q_behavior = self.Q_behavior(behavior_embeds)
         K_behavior = self.K_behavior(behavior_embeds)
         V_behavior = self.V_behavior(behavior_embeds)
-        # 2. 分头
+
         Q = self.split_head(Q)  # (batch,num_heads,seq_len,head_size)
         K = self.split_head(K)
         V = self.split_head(V)
         Q_behavior = self.split_head(Q_behavior)
         K_behavior = self.split_head(K_behavior)
         V_behavior = self.split_head(V_behavior)
-        # 3. 计算注意力分数
+
         attn_scores = torch.matmul(Q, K.transpose(-2, -1))  # (batch, num_heads, seq_len, seq_len)
         attn_scores_behavior = torch.matmul(Q_behavior, K_behavior.transpose(-2, -1))
         attn_scores = (attn_scores+attn_scores_behavior) / math.sqrt(self.head_size)
 
-        # 5. 加 mask（可选）
+
         if attn_mask is not None:
             # mask: (batch, 1, 1, seq_len) 或 (batch, 1, seq_len, seq_len)
             attn_scores = attn_scores + attn_mask
 
-        # 6. softmax
+
         attn_probs = torch.softmax(attn_scores, dim=-1)
         attn_probs = self.attn_dropout_layer(attn_probs)
-        # 7. 加权求和
+
         attn_output = torch.matmul(attn_probs, V)  # (batch, num_heads, seq_len, head_size)
-        # 8. 合并头
+
         attn_output = attn_output.permute(0, 2, 1, 3).contiguous()  # (batch, seq_len, num_heads, head_size)
         attn_output = attn_output.view(batch_size, seq_len, -1)  # (batch, seq_len, reconstruct_size)
-        # 9. FCL 和 LayerNorm
+
         output = self.FCL(attn_output)
         output = self.out_dropout_layer(output)
         output = self.final_layer_norm(output + item_embeds)
@@ -276,31 +276,31 @@ class MultiHeadAttention_early(SelfAttention):
     def forward(self, inputs, attn_mask):
             # inputs: (batch, seq_len, hidden_dims)
         batch_size, seq_len, _ = inputs.size()
-        # 1. 线性变换
+
         Q = self.Q(inputs)  # (batch, seq_len, reconstruct_size)
         K = self.K(inputs)
         V = self.V(inputs)
-        # 2. 分头
+
         Q = self.split_head(Q)  # (batch,num_heads,seq_len,head_size)
         K = self.split_head(K)
         V = self.split_head(V)
-        # 3. 计算注意力分数
+
         attn_scores = torch.matmul(Q, K.transpose(-2, -1))  # (batch, num_heads, seq_len, seq_len)
         attn_scores = attn_scores / math.sqrt(self.head_size)
-        # 5. 加 mask（可选）
+
         if attn_mask is not None:
             # mask: (batch, 1, 1, seq_len) 或 (batch, 1, seq_len, seq_len)
             attn_scores = attn_scores + attn_mask
 
-        # 6. softmax
+
         attn_probs = torch.softmax(attn_scores, dim=-1)
         attn_probs = self.attn_dropout_layer(attn_probs)
-        # 7. 加权求和
+
         attn_output = torch.matmul(attn_probs, V)  # (batch, num_heads, seq_len, head_size)
-        # 8. 合并头
+
         attn_output = attn_output.permute(0, 2, 1, 3).contiguous()  # (batch, seq_len, num_heads, head_size)
         attn_output = attn_output.view(batch_size, seq_len, -1)  # (batch, seq_len, reconstruct_size)
-        # 9. FCL 和 LayerNorm
+
         output = self.FCL(attn_output)
         output = self.final_layer_norm(output + inputs)
 
@@ -314,31 +314,31 @@ class MultiHeadAttention(SelfAttention):
     def forward(self, inputs, attn_mask):
             # inputs: (batch, seq_len, hidden_dims)
         batch_size, seq_len, _ = inputs.size()
-        # 1. 线性变换
+
         Q = self.Q(inputs)  # (batch, seq_len, reconstruct_size)
         K = self.K(inputs)
         V = self.V(inputs)
-        # 2. 分头
+
         Q = self.split_head(Q)  # (batch,num_heads,seq_len,head_size)
         K = self.split_head(K)
         V = self.split_head(V)
-        # 3. 计算注意力分数
+
         attn_scores = torch.matmul(Q, K.transpose(-2, -1))  # (batch, num_heads, seq_len, seq_len)
         attn_scores = attn_scores / math.sqrt(self.head_size)
-        # 5. 加 mask（可选）
+
         if attn_mask is not None:
             # mask: (batch, 1, 1, seq_len) 或 (batch, 1, seq_len, seq_len)
             attn_scores = attn_scores + attn_mask
 
-        # 6. softmax
+
         attn_probs = torch.softmax(attn_scores, dim=-1)
         attn_probs = self.attn_dropout_layer(attn_probs)
-        # 7. 加权求和
+
         attn_output = torch.matmul(attn_probs, V)  # (batch, num_heads, seq_len, head_size)
-        # 8. 合并头
+
         attn_output = attn_output.permute(0, 2, 1, 3).contiguous()  # (batch, seq_len, num_heads, head_size)
         attn_output = attn_output.view(batch_size, seq_len, -1)  # (batch, seq_len, reconstruct_size)
-        # 9. FCL 和 LayerNorm
+
         output = self.FCL(attn_output)
         output = self.final_layer_norm(output + inputs)
 
@@ -350,30 +350,30 @@ class CrossAttention(SelfAttention):
     def forward(self, query,key,value, attn_mask):
             # inputs: (batch, seq_len, hidden_dims)
         batch_size, seq_len, _ = query.size()
-        # 1. 线性变换
+
         Q = self.Q(query)  # (batch, seq_len, reconstruct_size)
         K = self.K(key)
         V = self.V(value)
-        # 2. 分头
+
         Q = self.split_head(Q)  # (batch, seq_len, num_heads, head_size)
         K = self.split_head(K)
         V = self.split_head(V)
-        # 3. 计算注意力分数
+
         attn_scores = torch.matmul(Q, K.transpose(-2, -1))  # (batch, num_heads, seq_len, seq_len)
         attn_scores = attn_scores / math.sqrt(self.head_size)
-        # 5. 加 mask（可选）
+
         if attn_mask is not None:
             # mask: (batch, 1, 1, seq_len) 或 (batch, 1, seq_len, seq_len)
             attn_scores = attn_scores + attn_mask
-        # 6. softmax
+
         attn_probs = torch.softmax(attn_scores, dim=-1)
         attn_probs = self.attn_dropout_layer(attn_probs)
-        # 7. 加权求和
+
         attn_output = torch.matmul(attn_probs, V)  # (batch, num_heads, seq_len, head_size)
-        # 8. 合并头
+
         attn_output = attn_output.permute(0, 2, 1, 3).contiguous()  # (batch, seq_len, num_heads, head_size)
         attn_output = attn_output.view(batch_size, seq_len, -1)  # (batch, seq_len, reconstruct_size)
-        # 9. FCL 和 LayerNorm
+
         output = self.FCL(attn_output)
         output = self.final_layer_norm(output + query)
 
