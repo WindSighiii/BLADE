@@ -411,7 +411,6 @@ class MoeEncoder(nn.Module):
         super(MoeEncoder,self).__init__()
         self.hidden_dims = config['hidden_dims']
         self.num_experts = config['num_experts']
-        self.num_cluster = config['num_cluster']
         self.num_blocks = config['num_blocks']
         self.seqs_blocks = nn.ModuleList()
         for _ in range(self.num_blocks):
@@ -427,7 +426,6 @@ class MoeEncoder_middle(nn.Module):
         super(MoeEncoder_middle,self).__init__()
         self.hidden_dims = config['hidden_dims']
         self.num_experts = config['num_experts']
-        self.num_cluster = config['num_cluster']
         self.num_blocks = config['num_blocks']
         self.seqs_blocks = nn.ModuleList()
         for _ in range(self.num_blocks):
