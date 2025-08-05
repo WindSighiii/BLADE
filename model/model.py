@@ -161,7 +161,6 @@ class BLADE(BasicModel):
         item_embeddings = self.item_emb(input_seq)
         item_embeddings *= self.item_emb.embedding_dim ** 0.5
         position_embeddings = self.pos_emb(position_ids)
-        #item_embeddings=self.frequency_layer(item_embeddings,self.click_only_mask)
         seq_emb = item_embeddings + position_embeddings
         seq_emb = self.emb_dropout(seq_emb)
         # (b, L, d)
@@ -214,7 +213,6 @@ class BLADE(BasicModel):
     
     def forward(self,users,item_seqs,behaviors_seqs,target_behaviors):
         self.padding_mask, self.attn_mask = self._generate_mask(item_seqs)
-        self.click_only_mask=computeMask(behaviors_seqs)
 
         seqs_emb,item_emb,pos_emb=self.seqsEncoding(item_seqs)
         bs_emb=self.set2emb(users,behaviors_seqs)
