@@ -33,7 +33,6 @@ class BasicModel(nn.Module):
         self.num_blocks = config['num_blocks']
         self.num_heads = config['num_heads']
         self.no = config['no']
-        self.num_cluster = config['num_cluster']
         self.use_mutl_gate=False
         self.save_path = config['output_dir']
         if not os.path.exists(self.save_path):
@@ -43,12 +42,9 @@ class BasicModel(nn.Module):
         fname = f"{self.model_name}_model.dataset={config['dataset']}." \
                 f"hs={config['num_heads']}.es={config['num_experts']}.nb={config['num_blocks']}." \
                 f"hd={config['hidden_dims']}.d={config['dropout']}.ml={config['maxlen']}." \
-                f"clu={config['num_cluster']}.bw={config['behavior_weight']}." \
                 f"rw={config['rec_weight']}.cw={config['cf_weight']}." \
                 f"to={config['trade_off']}." \
-                f"srit={config['seq_representation_instancecl_type']}.dn={config['de_noise']}." \
-                f"at={config['augment_type']}.ap={config['add_prob']}." \
-                f"cp={config['click_prob']}.mr={config['mask_ratio']}." \
+                f"at={config['augment_type']}." \
                 f"ep={config['max_epochs']}.st={config['seed']}.lr={config['lr']}." \
                 f"no={self.no}.pth"
         self.save_path = os.path.join(self.save_path, fname)
@@ -131,7 +127,6 @@ class BLADE(BasicModel):
         # Add behavior prediction head
         self.emb_layernorm = nn.LayerNorm(self.hidden_dims, eps=1e-8)
         # embedding
-        self.cluster_centers = nn.Parameter(torch.Tensor(int(self.num_cluster), int(self.hidden_dims)))
         self.item_emb = nn.Embedding(self.item_num+1, self.hidden_dims, padding_idx=0)
         self.pos_emb = nn.Embedding(self.maxlen, self.hidden_dims,padding_idx=0)
         #self.pos_emb = nn.Embedding(self.maxlen, self.hidden_dims)
