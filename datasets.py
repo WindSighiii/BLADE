@@ -31,7 +31,6 @@ class BehaviorSetSequentialRecDataset(Dataset):
         self.data_type = data_type
         self.maxlen = config['maxlen']
         self.augment_type = config['augment_type']
-        self.add_prob = config['add_prob']
         self.click_prob = config['click_prob']
         self.mask_ratio = config['mask_ratio']
         self.time_prob = config['time_prob']
